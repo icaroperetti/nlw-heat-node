@@ -3,6 +3,13 @@ import axios from 'axios'
 interface IAccessTokenResponse {
   access_token: string
 }
+
+interface IUserReponse {
+  avatar_url: string
+  login: string
+  id: number
+  name: string
+}
 class AuthenticateUserService {
   async execute(code: string) {
     const url = 'https://github.com/login/oauth/access_token'
@@ -18,11 +25,14 @@ class AuthenticateUserService {
         },
       })
 
-    const response = await axios.get('https://api.github.com/user', {
-      headers: {
-        authorization: `Bearer ${accessTokenResponse.access_token}`,
-      },
-    })
+    const response = await axios.get<IUserReponse>(
+      'https://api.github.com/user',
+      {
+        headers: {
+          authorization: `Bearer ${accessTokenResponse.access_token}`,
+        },
+      }
+    )
     return response.data
   }
 }
